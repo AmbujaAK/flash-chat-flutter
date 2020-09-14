@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'login_screen.dart';
 import 'registration_screen.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static const String id = 'welcome_screen';
@@ -24,14 +25,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
       duration: Duration(seconds: 1),
     );
 
-    _animation = CurvedAnimation(parent: _animationController,curve: Curves.easeIn);
+//    _animation = CurvedAnimation(parent: _animationController,curve: Curves.easeIn);
+    _animation = ColorTween(begin: Colors.blueGrey, end: Colors.white).animate(_animationController);
     _animationController.forward();
-
     _animationController.addListener(() {
-      setState(() {
-
-      });
-      print(_animationController.value);
+      setState(() {});
     });
   }
 
@@ -43,7 +41,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: _animation.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -56,12 +54,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/logo.png'),
-                    height: _animation.value * 100,
+                    height: 60.0,
                   ),
                 ),
-                Text(
-                  'Flash Chat',
-                  style: TextStyle(
+                TypewriterAnimatedTextKit(
+                  text: ['Flash Chat'],
+                  textStyle: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,
                     color: Colors.black
