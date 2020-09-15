@@ -72,7 +72,7 @@ class _ChatScreenState extends State<ChatScreen> {
             StreamBuilder<QuerySnapshot>(
               stream: _firestore.collection('messages').snapshots(),
               builder: (context,snapshot){
-                List<Text> msgWidget = [];
+                List<MessageBubble> msgWidget = [];
                 if(!snapshot.hasData){
                   return Center(
                     child: CircularProgressIndicator(),
@@ -82,11 +82,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   for(var msg in messages){
                     final msgText = msg.data()['text'];
                     final msgSender = msg.data()['sender'];
-                    final widget = Text('$msgText from $msgSender');
+                    final widget = MessageBubble(sender: msgSender, text: msgText,);
                     msgWidget.add(widget);
                   }
-                return Column(
-                  children: msgWidget,
+                return Expanded(
+                  child: ListView(
+                    children: msgWidget,
+                  ),
                 );
               },
             ),
@@ -120,6 +122,45 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class MessageBubble extends StatelessWidget {
+  final sender;
+  final text;
+
+  MessageBubble({this.sender,this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(sender,style: TextStyle(
+            fontSize: 12.0,
+            color: Colors.black54
+          ),),
+          Material(
+            borderRadius: BorderRadius.circular(30.0),
+            elevation: 5.0,
+            color: Colors.lightBlueAccent,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+              child: Text(
+                '$text',
+                style: TextStyle(
+                    fontSize: 15.0,
+                  color: Colors.white
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
